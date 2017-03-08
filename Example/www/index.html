@@ -1,0 +1,17 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=480,user-scalable=no"/>
+    <script type="text/javascript" src="data-channel.js"></script>
+    <script type="text/javascript" src="function-channel.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+<p>FunctionChannel (WebView)</p>
+<p><input type="button" value="正常系: MyClassObjc.fooを実行（同期）" onclick="OnButtonClick();"/></p>
+<p><input type="button" value="正常系: MyClassObjc.fooAを実行（非同期）" onclick="OnButtonClickA();"/></p>
+<p><input type="button" value="異常系: 未登録のオブジェクト" onclick="OnButtonClickE1();"/></p>
+<p><input type="button" value="異常系: 存在しないメソッド" onclick="OnButtonClickE2();"/></p>
+<p><input type="button" value="正常系: 破棄" onclick="OnButtonClickD();"/></p>
+</body>
+</html>
