@@ -297,6 +297,33 @@
                                  handler:^(NSError* error) {
                                      XCTAssertEqual(testA.count, -18);
                                  }];
+
+
+    NSLog(@"[正常系] コールバック内からのメソッド呼び出し");
+    testA.count = 0;
+    [_funcChB invokeWithInstanceId:@"ins:A"
+                            method:@"countUp"
+                         arguments:nil
+                          callback:^(NSError* _Nullable error, id _Nullable result) {
+                              XCTAssertNil(error);
+                              XCTAssertEqual(result, [NSNull null]);
+                              XCTAssertEqual(1, testA.count);
+                              [_funcChB invokeWithInstanceId:@"ins:A"
+                                                      method:@"getCount"
+                                                   arguments:nil
+                                                    callback:^(NSError* _Nullable error, id _Nullable result) {
+                                                        XCTAssertNil(error);
+                                                        XCTAssertEqual([result integerValue], 1);
+                                                        [_funcChB invokeWithInstanceId:@"ins:A"
+                                                                                method:@"countDown"
+                                                                             arguments:nil
+                                                                              callback:^(NSError* _Nullable error, id _Nullable result) {
+                                                                                  XCTAssertNil(error);
+                                                                                  XCTAssertEqual(result, [NSNull null]);
+                                                                              }];
+                                                    }];
+                          }];
+    XCTAssertEqual(0, testA.count);
 }
 
 @end
