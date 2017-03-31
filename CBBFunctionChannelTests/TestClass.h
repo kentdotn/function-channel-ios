@@ -28,3 +28,6 @@
 @interface TestClass : NSObject <TestClassExport>
 @property (readwrite) NSInteger count;
 @end
+
+@interface SubTestClass : TestClass
+@end

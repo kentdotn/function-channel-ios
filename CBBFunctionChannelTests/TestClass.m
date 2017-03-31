@@ -128,3 +128,6 @@
 }
 
 @end
+
+@implementation SubTestClass
+@end

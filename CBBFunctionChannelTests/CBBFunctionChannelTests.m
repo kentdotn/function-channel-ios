@@ -341,4 +341,24 @@
     XCTAssertEqual(0, testA.count);
 }
 
+- (void)testFunctionChannel_subClass
+{
+    SubTestClass* testA = [[SubTestClass alloc] init];
+    SubTestClass* testB = [[SubTestClass alloc] init];
+    [_funcChA bindWithInstanceId:@"ins:A" instance:testA];
+    [_funcChB bindWithInstanceId:@"ins:B" instance:testB];
+    
+    NSLog(@"[正常系] 引数+戻り値が無いメソッド実行");
+    [_funcChA invokeWithInstanceId:@"ins:B"
+                            method:@"countUp"
+                         arguments:nil
+                          callback:^(NSError* _Nullable error, id _Nullable result) {
+                              NSLog(@"error: %@, result: %@", error, result);
+                              XCTAssertNil(error);
+                              XCTAssertEqual(result, [NSNull null]);
+                          }];
+    XCTAssertEqual(0, testA.count);
+    XCTAssertEqual(1, testB.count);
+}
+
 @end
