@@ -30,7 +30,7 @@ NSString* const CBBFunctionChannelErrorAsync = @"CBBFunctionChannelErrorAsync";
         _remoteExportMethodTable = [NSMutableDictionary dictionary];
         __weak typeof(self) __self = self;
         _handler = ^(id _Nullable packet, CBBDataChannelResponseCallback _Nullable callback) {
-            if (_destroyed) {
+            if (__self.destroyed) {
                 return;
             }
             [__self onReceiveWithFormat:packet[0] packet:packet[1] callback:callback];
