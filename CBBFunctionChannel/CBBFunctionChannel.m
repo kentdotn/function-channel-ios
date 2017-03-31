@@ -97,6 +97,11 @@ NSString* const CBBFunctionChannelErrorAsync = @"CBBFunctionChannelErrorAsync";
     NSString* className = NSStringFromClass(cls);
     if (!_remoteExportMethodTable[className]) {
         _remoteExportMethodTable[className] = [CBBRemoteExportUtility exportRemoteExportMethodTableFromClass:cls];
+        while (nil != (cls = [cls superclass])) {
+            NSMutableDictionary* methods = [NSMutableDictionary dictionaryWithDictionary:_remoteExportMethodTable[className]];
+            [methods addEntriesFromDictionary:[CBBRemoteExportUtility exportRemoteExportMethodTableFromClass:cls]];
+            _remoteExportMethodTable[className] = methods;
+        }
     }
 }
 
