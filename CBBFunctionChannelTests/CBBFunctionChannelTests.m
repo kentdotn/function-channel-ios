@@ -359,6 +359,16 @@
                           }];
     XCTAssertEqual(0, testA.count);
     XCTAssertEqual(1, testB.count);
+
+    NSLog(@"[正常系] サブクラス側でexportしているメソッドを実行");
+    [_funcChA invokeWithInstanceId:@"ins:B"
+                            method:@"subExport"
+                         arguments:nil
+                          callback:^(NSError* _Nullable error, id _Nullable result) {
+                              NSLog(@"error: %@, result: %@", error, result);
+                              XCTAssertNil(error);
+                              XCTAssertTrue(result);
+                          }];
 }
 
 @end

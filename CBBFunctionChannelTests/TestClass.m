@@ -130,4 +130,10 @@
 @end
 
 @implementation SubTestClass
+
+- (BOOL)subExport
+{
+    return YES;
+}
+
 @end
