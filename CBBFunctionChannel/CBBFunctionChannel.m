@@ -152,22 +152,28 @@ NSString* const CBBFunctionChannelErrorAsync = @"CBBFunctionChannelErrorAsync";
 {
     id instance = self.instanceTable[instanceId];
     if (!instance) {
-        NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeObjectNotBound];
-        callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+        if (callback) {
+            NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeObjectNotBound];
+            callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+        }
     } else {
         NSString* className = NSStringFromClass([instance class]);
         NSString* conformsMethod = self.remoteExportMethodTable[className][methodName];
         if (!conformsMethod) {
-            NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
-            callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            if (callback) {
+                NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
+                callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            }
             return;
         }
         SEL selector = NSSelectorFromString(conformsMethod);
 
         NSMethodSignature* methodSignature = [instance methodSignatureForSelector:selector];
         if (methodSignature.numberOfArguments != arguments.count + 2) {
-            NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
-            callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            if (callback) {
+                NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
+                callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            }
             return;
         }
 
