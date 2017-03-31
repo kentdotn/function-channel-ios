@@ -97,6 +97,11 @@ NSString* const CBBFunctionChannelErrorAsync = @"CBBFunctionChannelErrorAsync";
     NSString* className = NSStringFromClass(cls);
     if (!_remoteExportMethodTable[className]) {
         _remoteExportMethodTable[className] = [CBBRemoteExportUtility exportRemoteExportMethodTableFromClass:cls];
+        while (nil != (cls = [cls superclass])) {
+            NSMutableDictionary* methods = [NSMutableDictionary dictionaryWithDictionary:_remoteExportMethodTable[className]];
+            [methods addEntriesFromDictionary:[CBBRemoteExportUtility exportRemoteExportMethodTableFromClass:cls]];
+            _remoteExportMethodTable[className] = methods;
+        }
     }
 }
 
@@ -152,22 +157,28 @@ NSString* const CBBFunctionChannelErrorAsync = @"CBBFunctionChannelErrorAsync";
 {
     id instance = self.instanceTable[instanceId];
     if (!instance) {
-        NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeObjectNotBound];
-        callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+        if (callback) {
+            NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeObjectNotBound];
+            callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+        }
     } else {
         NSString* className = NSStringFromClass([instance class]);
         NSString* conformsMethod = self.remoteExportMethodTable[className][methodName];
         if (!conformsMethod) {
-            NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
-            callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            if (callback) {
+                NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
+                callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            }
             return;
         }
         SEL selector = NSSelectorFromString(conformsMethod);
 
         NSMethodSignature* methodSignature = [instance methodSignatureForSelector:selector];
         if (methodSignature.numberOfArguments != arguments.count + 2) {
-            NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
-            callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            if (callback) {
+                NSString* errorString = [self stringFromErrorType:CBBFunctionChannelErrorTypeMethodNotExist];
+                callback(@[ CBBFunctionChannelFormatERR, errorString ]);
+            }
             return;
         }
 

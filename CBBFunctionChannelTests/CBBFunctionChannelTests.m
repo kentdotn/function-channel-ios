@@ -245,6 +245,11 @@
     XCTAssertEqual(testA.count, -14);
     XCTAssertEqual(testB.count, 0);
 
+    NSLog(@"[異常系] exportしていないが存在するメソッドを呼び出す (コールバック省略)");
+    [_funcChB invokeWithInstanceId:@"ins:A"
+                            method:@"protectMethod"
+                         arguments:@[ @(2525), @(4649) ]];
+
     NSLog(@"[異常系] 存在しないメソッドを呼び出す");
     [_funcChB invokeWithInstanceId:@"ins:A"
                             method:@"notExitMethod"
@@ -256,6 +261,11 @@
     XCTAssertEqual(testA.count, -15);
     XCTAssertEqual(testB.count, 0);
 
+    NSLog(@"[異常系] 存在しないメソッドを呼び出す (コールバック省略)");
+    [_funcChB invokeWithInstanceId:@"ins:A"
+                            method:@"notExitMethod"
+                         arguments:@[ @(2525), @(4649) ]];
+
     NSLog(@"[異常系] 存在しないインスタンスIDを指定");
     [_funcChB invokeWithInstanceId:@"ins:C"
                             method:@"addString"
@@ -266,6 +276,11 @@
                           }];
     XCTAssertEqual(testA.count, -16);
     XCTAssertEqual(testB.count, 0);
+
+    NSLog(@"[異常系] 存在しないインスタンスIDを指定 (コールバック省略)");
+    [_funcChB invokeWithInstanceId:@"ins:C"
+                            method:@"addString"
+                         arguments:@[ @(2525), @(4649) ]];
 
     NSLog(@"[正常系] 第2引数(以降)にキーワードを付与したメソッドを実装する場合");
     [_funcChB invokeWithInstanceId:@"ins:A"
@@ -297,6 +312,63 @@
                                  handler:^(NSError* error) {
                                      XCTAssertEqual(testA.count, -18);
                                  }];
+
+
+    NSLog(@"[正常系] コールバック内からのメソッド呼び出し");
+    testA.count = 0;
+    [_funcChB invokeWithInstanceId:@"ins:A"
+                            method:@"countUp"
+                         arguments:nil
+                          callback:^(NSError* _Nullable error, id _Nullable result) {
+                              XCTAssertNil(error);
+                              XCTAssertEqual(result, [NSNull null]);
+                              XCTAssertEqual(1, testA.count);
+                              [_funcChB invokeWithInstanceId:@"ins:A"
+                                                      method:@"getCount"
+                                                   arguments:nil
+                                                    callback:^(NSError* _Nullable error, id _Nullable result) {
+                                                        XCTAssertNil(error);
+                                                        XCTAssertEqual([result integerValue], 1);
+                                                        [_funcChB invokeWithInstanceId:@"ins:A"
+                                                                                method:@"countDown"
+                                                                             arguments:nil
+                                                                              callback:^(NSError* _Nullable error, id _Nullable result) {
+                                                                                  XCTAssertNil(error);
+                                                                                  XCTAssertEqual(result, [NSNull null]);
+                                                                              }];
+                                                    }];
+                          }];
+    XCTAssertEqual(0, testA.count);
+}
+
+- (void)testFunctionChannel_subClass
+{
+    SubTestClass* testA = [[SubTestClass alloc] init];
+    SubTestClass* testB = [[SubTestClass alloc] init];
+    [_funcChA bindWithInstanceId:@"ins:A" instance:testA];
+    [_funcChB bindWithInstanceId:@"ins:B" instance:testB];
+    
+    NSLog(@"[正常系] 引数+戻り値が無いメソッド実行");
+    [_funcChA invokeWithInstanceId:@"ins:B"
+                            method:@"countUp"
+                         arguments:nil
+                          callback:^(NSError* _Nullable error, id _Nullable result) {
+                              NSLog(@"error: %@, result: %@", error, result);
+                              XCTAssertNil(error);
+                              XCTAssertEqual(result, [NSNull null]);
+                          }];
+    XCTAssertEqual(0, testA.count);
+    XCTAssertEqual(1, testB.count);
+
+    NSLog(@"[正常系] サブクラス側でexportしているメソッドを実行");
+    [_funcChA invokeWithInstanceId:@"ins:B"
+                            method:@"subExport"
+                         arguments:nil
+                          callback:^(NSError* _Nullable error, id _Nullable result) {
+                              NSLog(@"error: %@, result: %@", error, result);
+                              XCTAssertNil(error);
+                              XCTAssertTrue(result);
+                          }];
 }
 
 @end

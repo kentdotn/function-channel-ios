@@ -25,6 +25,13 @@
 - (CBBAsyncResult*)addStringAsyncErrorWithA:(NSString*)a b:(NSString*)b;
 @end
 
+@protocol SubTestClassExport <CBBRemoteExport>
+- (BOOL)subExport;
+@end
+
 @interface TestClass : NSObject <TestClassExport>
 @property (readwrite) NSInteger count;
+@end
+
+@interface SubTestClass : TestClass <SubTestClassExport>
 @end
