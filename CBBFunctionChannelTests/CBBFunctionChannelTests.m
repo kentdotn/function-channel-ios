@@ -245,6 +245,11 @@
     XCTAssertEqual(testA.count, -14);
     XCTAssertEqual(testB.count, 0);
 
+    NSLog(@"[異常系] exportしていないが存在するメソッドを呼び出す (コールバック省略)");
+    [_funcChB invokeWithInstanceId:@"ins:A"
+                            method:@"protectMethod"
+                         arguments:@[ @(2525), @(4649) ]];
+
     NSLog(@"[異常系] 存在しないメソッドを呼び出す");
     [_funcChB invokeWithInstanceId:@"ins:A"
                             method:@"notExitMethod"
@@ -256,6 +261,11 @@
     XCTAssertEqual(testA.count, -15);
     XCTAssertEqual(testB.count, 0);
 
+    NSLog(@"[異常系] 存在しないメソッドを呼び出す (コールバック省略)");
+    [_funcChB invokeWithInstanceId:@"ins:A"
+                            method:@"notExitMethod"
+                         arguments:@[ @(2525), @(4649) ]];
+
     NSLog(@"[異常系] 存在しないインスタンスIDを指定");
     [_funcChB invokeWithInstanceId:@"ins:C"
                             method:@"addString"
@@ -266,6 +276,11 @@
                           }];
     XCTAssertEqual(testA.count, -16);
     XCTAssertEqual(testB.count, 0);
+
+    NSLog(@"[異常系] 存在しないインスタンスIDを指定 (コールバック省略)");
+    [_funcChB invokeWithInstanceId:@"ins:C"
+                            method:@"addString"
+                         arguments:@[ @(2525), @(4649) ]];
 
     NSLog(@"[正常系] 第2引数(以降)にキーワードを付与したメソッドを実装する場合");
     [_funcChB invokeWithInstanceId:@"ins:A"
