@@ -1,5 +1,8 @@
 # Change log
 
+## Version 2.0.4
+- CBBDataChannelを更新: 2.0.2 -> 2.0.3
+
 ## Version 2.0.3
 - CBBDataChannelを更新: 2.0.1 -> 2.0.2
 
