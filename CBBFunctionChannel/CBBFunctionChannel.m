@@ -219,21 +219,25 @@ NSString* const CBBFunctionChannelErrorAsync = @"CBBFunctionChannelErrorAsync";
                     BOOL result;
                     [invocation getReturnValue:&result];
                     callback(@[ CBBFunctionChannelFormatEDO, @(result) ]);
+                    break;
                 }
                 case 'f': { // float型
                     float result;
                     [invocation getReturnValue:&result];
                     callback(@[ CBBFunctionChannelFormatEDO, @(result) ]);
+                    break;
                 }
                 case 'd': { // double型
                     double result;
                     [invocation getReturnValue:&result];
                     callback(@[ CBBFunctionChannelFormatEDO, @(result) ]);
+                    break;
                 }
                 default: { // その他は全て NSInteger に変換したオブジェクトで返す
                     NSInteger result;
                     [invocation getReturnValue:&result];
                     callback(@[ CBBFunctionChannelFormatEDO, @(result) ]);
+                    break;
                 }
             }
         }
