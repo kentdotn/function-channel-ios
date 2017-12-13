@@ -190,7 +190,12 @@ NSString* const CBBFunctionChannelErrorAsync = @"CBBFunctionChannelErrorAsync";
             [invocation setArgument:(void*)&argument atIndex:index++];
         }
         [invocation retainArguments];
-        [invocation invoke];
+        @try {
+            [invocation invoke];
+        }
+        @catch (NSException* exception) {
+            NSLog(@"cannot invoke %@ with %@ due to: %@", methodName, arguments, exception);
+        }
 
         if (callback) {
             // 戻り値型に応じたコールバック
